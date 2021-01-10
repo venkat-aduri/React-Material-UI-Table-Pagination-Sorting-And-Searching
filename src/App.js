@@ -2,14 +2,25 @@ import logo from './logo.svg';
 import './App.css';
 import React, { useState } from 'react';
 import useTable from './useTable';
-import { TableBody, TableRow, TableCell, Toolbar, makeStyles, InputAdornment } from '@material-ui/core';
+import { Paper, TableBody, TableRow, TableCell, Toolbar, makeStyles, InputAdornment } from '@material-ui/core';
 import Input from './Input';
 import { Search } from '@material-ui/icons';
+import Button from './Button';
+//import Popup from "../../components/Popup";
+//import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles(theme=>({
+  pageContent: {
+    margin: theme.spacing(5),
+    padding: theme.spacing(3)
+  },
   searchInput:{
     width : '75%'
-  }
+  },
+  newButton: {
+    position: 'absolute',
+    right: '10px'
+}
 }));
 
 const records1 = [
@@ -41,7 +52,9 @@ function App() {
   const classes = useStyles();
 
   const [records, setRecords] = useState(records1);
-  const [filterFn, setFilterFn] = useState({ fn: items => { return items; } })
+  const [filterFn, setFilterFn] = useState({ fn: items => { return items; } });
+  // const [recordForEdit, setRecordForEdit] = useState(null);
+  // const [openPopup, setOpenPopup] = useState(false);
 
   const {
     TblContainer,
@@ -68,35 +81,44 @@ function App() {
 
   return (
     <div >
-      <Toolbar>
-          <Input
-              label="Search Employees"
-              className={classes.searchInput}
-              InputProps={{
-                  startAdornment: (<InputAdornment position="start">
-                      <Search />
-                  </InputAdornment>)
-              }}
-              onChange={handleSearch}
-          />
-      </Toolbar>
-      <TblContainer>
-        <TblHead/>
-        <TableBody>
-          {
-            recordsAfterPagingAndSorting().map(record => (
-              <TableRow key={record.id}>
-                <TableCell>{record.id}</TableCell>
-                <TableCell>{record.fullName}</TableCell>
-                <TableCell>{record.email}</TableCell>
-                <TableCell>{record.department}</TableCell>
-              </TableRow>
-            ))
-          }
+      <Paper className={classes.pageContent}>
+        <Toolbar>
+            <Input
+                label="Search Employees"
+                className={classes.searchInput}
+                InputProps={{
+                    startAdornment: (<InputAdornment position="start">
+                        <Search />
+                    </InputAdornment>)
+                }}
+                onChange={handleSearch}
+            />
+            {/* <Button
+                text="Add New"
+                variant="outlined"
+                startIcon={<AddIcon />}
+                className={classes.newButton}
+                onClick={() => { setOpenPopup(true); setRecordForEdit(null); }}
+            /> */}
+        </Toolbar>
+        <TblContainer>
+          <TblHead/>
+          <TableBody>
+            {
+              recordsAfterPagingAndSorting().map(record => (
+                <TableRow key={record.id}>
+                  <TableCell>{record.id}</TableCell>
+                  <TableCell>{record.fullName}</TableCell>
+                  <TableCell>{record.email}</TableCell>
+                  <TableCell>{record.department}</TableCell>
+                </TableRow>
+              ))
+            }
 
-        </TableBody>
+          </TableBody> 
+        </TblContainer>
         <TblPagination/>
-      </TblContainer>
+      </Paper>
 
     </div>
   );
